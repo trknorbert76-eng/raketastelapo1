@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Rakétás Télapó</title>
+
+<style>
+html,body{
+margin:0;
+height:100%;
+overflow:hidden;
+background:black;
+font-family:Georgia;
+color:white;
+}
+
+.scene{
+position:relative;
+width:100%;
+height:100vh;
+}
+
+/* háttér */
+
+#mainBg{
+position:absolute;
+inset:0;
+width:100%;
+height:100%;
+object-fit:cover;
+z-index:1;
+}
+
+/* hangulat videók */
+
+#walkVideo{
+position:absolute;
+inset:0;
+width:100%;
+height:100%;
+object-fit:cover;
+z-index:2;
+display:none;
+}
+
+#snowMoodVideo{
+position:absolute;
+inset:0;
+width:100%;
+height:100%;
+object-fit:cover;
+z-index:3;
+display:none;
+mix-blend-mode:screen;
+}
+
+/* vers videó */
+
+#poemVideo{
+position:absolute;
+inset:0;
+width:100%;
+height:100%;
+object-fit:cover;
+z-index:20;
+display:none;
+background:black;
+box-shadow:0 0 40px rgba(255,255,255,0.25);
+}
+
+/* gombok */
+
+.controls{
+position:absolute;
+left:50%;
+bottom:5vh;
+transform:translateX(-50%);
+display:flex;
+gap:30px;
+z-index:999;
+align-items:flex-end;
+}
+
+.btnBlock{
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:8px;
+}
+
+.btnLabel{
+font-size:18px;
+letter-spacing:1px;
+text-shadow:0 0 10px rgba(255,255,255,0.6);
+}
+
+.img-btn{
+background:none;
+border:none;
+cursor:pointer;
+padding:0;
+}
+
+.img-btn img{
+width:120px;
+display:block;
+}
+
+#moodBtn img{
+width:100px;
+filter:drop-shadow(0 0 12px rgba(200,220,255,0.5));
+}
+
+/* vissza */
+
+#closeBtn{
+position:absolute;
+top:20px;
+right:20px;
+z-index:50;
+padding:10px 18px;
+background:rgba(0,0,0,0.55);
+color:white;
+border-radius:20px;
+border:1px solid rgba(255,255,255,0.4);
+cursor:pointer;
+backdrop-filter:blur(4px);
+display:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="scene">
+
+<img id="mainBg" src="hatter1.png" alt="Háttér">
+
+<video id="walkVideo" src="elsetal.mp4" playsinline></video>
+
+<video id="snowMoodVideo" src="hanghoeses.mp4" loop playsinline muted></video>
+
+<video id="poemVideo" controls playsinline></video>
+
+<button id="closeBtn">Vissza</button>
+
+<div class="controls">
+
+<div class="btnBlock">
+<div class="btnLabel">Hangulat</div>
+<button class="img-btn" id="moodBtn">
+<img src="hangulatgomb.png" alt="Hangulat">
+</button>
+</div>
+
+<div class="btnBlock">
+<div class="btnLabel">AT1</div>
+<button class="img-btn" id="poem1Btn">
+<img src="gomb1.png" alt="AT1">
+</button>
+</div>
+
+<div class="btnBlock">
+<div class="btnLabel">AT2</div>
+<button class="img-btn" id="poem2Btn">
+<img src="gomb2.png" alt="AT2">
+</button>
+</div>
+
+<div class="btnBlock">
+<div class="btnLabel">AT3</div>
+<button class="img-btn" id="rocketBtn">
+<img src="gomb3.png" alt="AT3">
+</button>
+</div>
+
+</div>
+
+</div>
+
+<script>
+const walkVideo = document.getElementById("walkVideo");
+const snowVideo = document.getElementById("snowMoodVideo");
+const poemVideo = document.getElementById("poemVideo");
+
+const moodBtn = document.getElementById("moodBtn");
+const poem1Btn = document.getElementById("poem1Btn");
+const poem2Btn = document.getElementById("poem2Btn");
+const rocketBtn = document.getElementById("rocketBtn");
+
+const controls = document.querySelector(".controls");
+const closeBtn = document.getElementById("closeBtn");
+
+let mood = false;
+let snow = false;
+let snowStartedThisRun = false;
+
+/* élő videó linkek */
+const poem1Url = "https://res.cloudinary.com/dgcumjeuj/video/upload/VERS1_mxdwsj.mp4";
+const poem2Url = "https://res.cloudinary.com/dgcumjeuj/video/upload/VERS2_pklbnl.mp4";
+const at3Url = "https://trknorbert76-eng.github.io/raketastelapo2/";
+
+function stopMood(){
+  walkVideo.pause();
+  snowVideo.pause();
+
+  walkVideo.currentTime = 0;
+  snowVideo.currentTime = 0;
+
+  walkVideo.style.display = "none";
+  snowVideo.style.display = "none";
+
+  mood = false;
+  snow = false;
+  snowStartedThisRun = false;
+}
+
+function stopPoem(){
+  poemVideo.pause();
+  poemVideo.currentTime = 0;
+  poemVideo.removeAttribute("src");
+  poemVideo.load();
+  poemVideo.style.display = "none";
+  closeBtn.style.display = "none";
+  controls.style.display = "flex";
+}
+
+function startPoem(url){
+  stopMood();
+
+  controls.style.display = "none";
+
+  poemVideo.src = url;
+  poemVideo.style.display = "block";
+  closeBtn.style.display = "block";
+
+  poemVideo.play().catch(() => {});
+}
+
+/* hangulat */
+
+walkVideo.addEventListener("timeupdate", () => {
+  if (mood && !snowStartedThisRun && walkVideo.duration && walkVideo.currentTime > walkVideo.duration / 2) {
+    snowStartedThisRun = true;
+    snow = true;
+    snowVideo.style.display = "block";
+    snowVideo.play().catch(() => {});
+  }
+});
+
+moodBtn.onclick = () => {
+  if (!mood) {
+    mood = true;
+    snow = false;
+    snowStartedThisRun = false;
+
+    walkVideo.style.display = "block";
+    walkVideo.play().catch(() => {});
+  } else {
+    stopMood();
+  }
+};
+
+/* AT1 */
+
+poem1Btn.onclick = () => {
+  startPoem(poem1Url);
+};
+
+/* AT2 */
+
+poem2Btn.onclick = () => {
+  startPoem(poem2Url);
+};
+
+/* vissza */
+
+closeBtn.onclick = () => {
+  stopPoem();
+};
+
+/* rakéta oldal */
+
+rocketBtn.onclick = () => {
+  window.location.href = at3Url;
+};
+</script>
+
+</body>
+</html>
