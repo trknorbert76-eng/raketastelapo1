@@ -265,6 +265,27 @@ html, body {
 </div>
 
 <script>
+const SUPABASE_URL = "https://hhysuxfwdjwlxtmlxnrv.supabase.co";
+const SUPABASE_KEY = "sb_publishable_4Btoi0wsypr48xQH31RMaQ_r1YrPpsv";
+
+async function count(eventName) {
+  try {
+    await fetch(SUPABASE_URL + "/rest/v1/stats", {
+      method: "POST",
+      headers: {
+        "apikey": SUPABASE_KEY,
+        "Authorization": "Bearer " + SUPABASE_KEY,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        event: eventName
+      })
+    });
+  } catch (err) {
+    console.log("Számláló hiba:", err);
+  }
+}
+
 const walkVideo = document.getElementById("walkVideo");
 const snowVideo = document.getElementById("snowMoodVideo");
 const poemVideo = document.getElementById("poemVideo");
@@ -319,6 +340,8 @@ function startPoem(url) {
 }
 
 moodBtn.onclick = async () => {
+  count("hangulat");
+
   if (!moodActive) {
     moodActive = true;
 
@@ -340,10 +363,12 @@ moodBtn.onclick = async () => {
 };
 
 poem1Btn.onclick = () => {
+  count("at1");
   startPoem(poem1Url);
 };
 
 poem2Btn.onclick = () => {
+  count("at2");
   startPoem(poem2Url);
 };
 
@@ -352,26 +377,9 @@ closeBtn.onclick = () => {
 };
 
 rocketBtn.onclick = () => {
+  count("at3");
   window.location.href = at3Url;
 };
-  const SUPABASE_URL = "https://hhysuxfwdjwlxtmlxnrv.supabase.co"
-const SUPABASE_KEY = "IDE_A_PUBLISHABLE_KEY"
-
-async function count(eventName){
-
-  await fetch(SUPABASE_URL + "/rest/v1/stats", {
-    method: "POST",
-    headers: {
-      "apikey": SUPABASE_KEY,
-      "Authorization": "Bearer " + SUPABASE_KEY,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      event: eventName
-    })
-  })
-
-}
 </script>
 
 </body>
