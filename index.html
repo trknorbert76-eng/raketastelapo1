@@ -2,131 +2,205 @@
 <html lang="hu">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>Rakétás Télapó</title>
 
 <style>
-html,body{
-margin:0;
-height:100%;
-overflow:hidden;
-background:black;
-font-family:Georgia;
-color:white;
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: black;
+  font-family: Georgia, serif;
+  color: white;
 }
 
-.scene{
-position:relative;
-width:100%;
-height:100vh;
+* {
+  box-sizing: border-box;
+}
+
+.scene {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: black;
 }
 
 /* háttér */
 
-#mainBg{
-position:absolute;
-inset:0;
-width:100%;
-height:100%;
-object-fit:cover;
-z-index:1;
+#mainBg,
+#walkVideo,
+#snowMoodVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-/* hangulat videók */
-
-#walkVideo{
-position:absolute;
-inset:0;
-width:100%;
-height:100%;
-object-fit:cover;
-z-index:2;
-display:none;
+#mainBg {
+  z-index: 1;
 }
 
-#snowMoodVideo{
-position:absolute;
-inset:0;
-width:100%;
-height:100%;
-object-fit:cover;
-z-index:3;
-display:none;
-mix-blend-mode:screen;
+#walkVideo {
+  z-index: 2;
+  display: none;
+}
+
+#snowMoodVideo {
+  z-index: 3;
+  display: none;
+  mix-blend-mode: screen;
 }
 
 /* vers videó */
 
-#poemVideo{
-position:absolute;
-inset:0;
-width:100%;
-height:100%;
-object-fit:cover;
-z-index:20;
-display:none;
-background:black;
-box-shadow:0 0 40px rgba(255,255,255,0.25);
+#poemVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 20;
+  display: none;
+  background: black;
+  box-shadow: 0 0 40px rgba(255,255,255,0.25);
+}
+
+/* vissza gomb */
+
+#closeBtn {
+  position: absolute;
+  top: max(16px, env(safe-area-inset-top));
+  right: max(16px, env(safe-area-inset-right));
+  z-index: 50;
+  padding: 10px 18px;
+  background: rgba(0,0,0,0.58);
+  color: white;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.4);
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  display: none;
+  font-size: 15px;
 }
 
 /* gombok */
 
-.controls{
-position:absolute;
-left:50%;
-bottom:5vh;
-transform:translateX(-50%);
-display:flex;
-gap:30px;
-z-index:999;
-align-items:flex-end;
+.controls {
+  position: absolute;
+  left: 50%;
+  bottom: 5vh;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 26px;
+  z-index: 999;
+  align-items: end;
+  width: max-content;
+  max-width: calc(100vw - 24px);
 }
 
-.btnBlock{
-display:flex;
-flex-direction:column;
-align-items:center;
-gap:8px;
+.btnBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
 }
 
-.btnLabel{
-font-size:18px;
-letter-spacing:1px;
-text-shadow:0 0 10px rgba(255,255,255,0.6);
+.btnLabel {
+  font-size: 18px;
+  letter-spacing: 1px;
+  text-shadow: 0 0 10px rgba(255,255,255,0.6);
+  text-align: center;
 }
 
-.img-btn{
-background:none;
-border:none;
-cursor:pointer;
-padding:0;
+.img-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.img-btn img{
-width:120px;
-display:block;
+.img-btn img {
+  width: 120px;
+  display: block;
+  height: auto;
 }
 
-#moodBtn img{
-width:100px;
-filter:drop-shadow(0 0 12px rgba(200,220,255,0.5));
+#moodBtn img {
+  width: 100px;
+  filter: drop-shadow(0 0 12px rgba(200,220,255,0.5));
 }
 
-/* vissza */
+/* mobil */
 
-#closeBtn{
-position:absolute;
-top:20px;
-right:20px;
-z-index:50;
-padding:10px 18px;
-background:rgba(0,0,0,0.55);
-color:white;
-border-radius:20px;
-border:1px solid rgba(255,255,255,0.4);
-cursor:pointer;
-backdrop-filter:blur(4px);
-display:none;
+@media (max-width: 700px) {
+  .scene {
+    height: 100dvh;
+  }
+
+  .controls {
+    left: 50%;
+    bottom: calc(24px + env(safe-area-inset-bottom));
+    transform: translateX(-50%);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-items: center;
+    align-items: end;
+    row-gap: 14px;
+    column-gap: 18px;
+    width: min(320px, calc(100vw - 24px));
+    max-width: min(320px, calc(100vw - 24px));
+  }
+
+  .controls .btnBlock {
+    width: 100%;
+  }
+
+  /* Hangulat felül középen */
+  .controls .btnBlock:first-child {
+    grid-column: 1 / span 2;
+  }
+
+  /* AT3 alul középen */
+  .controls .btnBlock:last-child {
+    grid-column: 1 / span 2;
+  }
+
+  .img-btn img {
+    width: 82px;
+  }
+
+  #moodBtn img {
+    width: 72px;
+  }
+
+  .btnLabel {
+    font-size: 14px;
+  }
+
+  #poemVideo {
+    width: 94vw;
+    height: auto;
+    max-height: 72vh;
+    object-fit: contain;
+    left: 50%;
+    top: 50%;
+    right: auto;
+    bottom: auto;
+    transform: translate(-50%, -50%);
+    inset: auto;
+  }
+
+  #closeBtn {
+    font-size: 14px;
+    padding: 9px 16px;
+  }
 }
 </style>
 </head>
@@ -135,47 +209,45 @@ display:none;
 
 <div class="scene">
 
-<img id="mainBg" src="hatter1.png" alt="Háttér">
+  <img id="mainBg" src="hatter1.png" alt="Háttér">
 
-<video id="walkVideo" src="elsetal.mp4" playsinline></video>
+  <video id="walkVideo" src="elsetal.mp4" playsinline preload="auto"></video>
 
-<video id="snowMoodVideo" src="hanghoeses.mp4" loop playsinline ></video>
+  <video id="snowMoodVideo" src="hanghoeses.mp4" loop playsinline preload="auto"></video>
 
-<video id="poemVideo" controls playsinline></video>
+  <video id="poemVideo" controls playsinline></video>
 
-<button id="closeBtn">Vissza</button>
+  <button id="closeBtn">Vissza</button>
 
-<div class="controls">
+  <div class="controls">
+    <div class="btnBlock">
+      <div class="btnLabel">Hangulat</div>
+      <button class="img-btn" id="moodBtn">
+        <img src="hangulatgomb.png" alt="Hangulat">
+      </button>
+    </div>
 
-<div class="btnBlock">
-<div class="btnLabel">Hangulat</div>
-<button class="img-btn" id="moodBtn">
-<img src="hangulatgomb.png" alt="Hangulat">
-</button>
-</div>
+    <div class="btnBlock">
+      <div class="btnLabel">AT1</div>
+      <button class="img-btn" id="poem1Btn">
+        <img src="gomb1.png" alt="AT1">
+      </button>
+    </div>
 
-<div class="btnBlock">
-<div class="btnLabel">AT1</div>
-<button class="img-btn" id="poem1Btn">
-<img src="gomb1.png" alt="AT1">
-</button>
-</div>
+    <div class="btnBlock">
+      <div class="btnLabel">AT2</div>
+      <button class="img-btn" id="poem2Btn">
+        <img src="gomb2.png" alt="AT2">
+      </button>
+    </div>
 
-<div class="btnBlock">
-<div class="btnLabel">AT2</div>
-<button class="img-btn" id="poem2Btn">
-<img src="gomb2.png" alt="AT2">
-</button>
-</div>
-
-<div class="btnBlock">
-<div class="btnLabel">AT3</div>
-<button class="img-btn" id="rocketBtn">
-<img src="gomb3.png" alt="AT3">
-</button>
-</div>
-
-</div>
+    <div class="btnBlock">
+      <div class="btnLabel">AT3</div>
+      <button class="img-btn" id="rocketBtn">
+        <img src="gomb3.png" alt="AT3">
+      </button>
+    </div>
+  </div>
 
 </div>
 
@@ -192,16 +264,16 @@ const rocketBtn = document.getElementById("rocketBtn");
 const controls = document.querySelector(".controls");
 const closeBtn = document.getElementById("closeBtn");
 
-let mood = false;
-let snow = false;
-let snowStartedThisRun = false;
-
 /* élő videó linkek */
 const poem1Url = "https://res.cloudinary.com/dgcumjeuj/video/upload/VERS1_mxdwsj.mp4";
 const poem2Url = "https://res.cloudinary.com/dgcumjeuj/video/upload/VERS2_pklbnl.mp4";
 const at3Url = "https://trknorbert76-eng.github.io/raketastelapo2/";
 
-function stopMood(){
+let moodActive = false;
+
+function stopMood() {
+  moodActive = false;
+
   walkVideo.pause();
   snowVideo.pause();
 
@@ -210,27 +282,22 @@ function stopMood(){
 
   walkVideo.style.display = "none";
   snowVideo.style.display = "none";
-
-  mood = false;
-  snow = false;
-  snowStartedThisRun = false;
 }
 
-function stopPoem(){
+function stopPoem() {
   poemVideo.pause();
   poemVideo.currentTime = 0;
   poemVideo.removeAttribute("src");
   poemVideo.load();
   poemVideo.style.display = "none";
   closeBtn.style.display = "none";
-  controls.style.display = "flex";
+  controls.style.display = "";
 }
 
-function startPoem(url){
+function startPoem(url) {
   stopMood();
 
   controls.style.display = "none";
-
   poemVideo.src = url;
   poemVideo.style.display = "block";
   closeBtn.style.display = "block";
@@ -238,49 +305,38 @@ function startPoem(url){
   poemVideo.play().catch(() => {});
 }
 
-/* hangulat */
-
-walkVideo.addEventListener("timeupdate", () => {
-  if (mood && !snowStartedThisRun && walkVideo.duration && walkVideo.currentTime > walkVideo.duration / 2) {
-    snowStartedThisRun = true;
-    snow = true;
-    snowVideo.style.display = "block";
-    snowVideo.play().catch(() => {});
-  }
-});
-
-moodBtn.onclick = () => {
-  if (!mood) {
-    mood = true;
-    snow = false;
-    snowStartedThisRun = false;
+moodBtn.onclick = async () => {
+  if (!moodActive) {
+    moodActive = true;
 
     walkVideo.style.display = "block";
-    walkVideo.play().catch(() => {});
+    snowVideo.style.display = "block";
+
+    snowVideo.volume = 0.5;
+
+    try {
+      await walkVideo.play();
+    } catch (e) {}
+
+    try {
+      await snowVideo.play();
+    } catch (e) {}
   } else {
     stopMood();
   }
 };
 
-/* AT1 */
-
 poem1Btn.onclick = () => {
   startPoem(poem1Url);
 };
-
-/* AT2 */
 
 poem2Btn.onclick = () => {
   startPoem(poem2Url);
 };
 
-/* vissza */
-
 closeBtn.onclick = () => {
   stopPoem();
 };
-
-/* rakéta oldal */
 
 rocketBtn.onclick = () => {
   window.location.href = at3Url;
