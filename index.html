@@ -152,28 +152,18 @@ html, body {
     object-position: 35% center;
   }
 
-  .controls {
-    position: absolute;
-    left: 50%;
-    top: 65%;
-    bottom: auto;
-    transform: translate(-50%, -50%);
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    justify-items: center;
-    align-items: end;
-    row-gap: 16px;
-    column-gap: 20px;
-    width: min(300px, calc(100vw - 24px));
-    max-width: min(300px, calc(100vw - 24px));
-  }
+ .controls {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
 
-  .controls .btnBlock:first-child {
-    grid-column: 1 / span 2;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
 
-  .controls .btnBlock:last-child {
-    grid-column: 1 / span 2;
+  align-items: center;
+}
   }
 
   .controls .btnBlock {
