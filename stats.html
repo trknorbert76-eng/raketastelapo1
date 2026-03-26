@@ -1,0 +1,102 @@
+
+
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<title>Vers statisztika</title>
+<style>
+body{
+  font-family: Arial, sans-serif;
+  background:#111;
+  color:#fff;
+  padding:40px;
+}
+
+h1{
+  margin-bottom:30px;
+}
+
+table{
+  border-collapse:collapse;
+  width:400px;
+}
+
+td,th{
+  border:1px solid #444;
+  padding:10px;
+  text-align:left;
+}
+
+th{
+  background:#222;
+}
+
+tr:nth-child(even){
+  background:#1a1a1a;
+}
+</style>
+</head>
+<body>
+
+<h1>Vers megtekintések</h1>
+
+<table>
+<thead>
+<tr>
+<th>Vers</th>
+<th>Megtekintés</th>
+</tr>
+</thead>
+<tbody id="statsTable"></tbody>
+</table>
+
+<script>
+const SUPABASE_URL = "https://hhysuxfwdjwlxtmlxnrv.supabase.co";
+const SUPABASE_KEY = "sb_publishable_4Btoi0wsypr48xQH31RMaQ_r1YrPpsv";
+
+async function loadStats(){
+
+const res = await fetch(
+  SUPABASE_URL +
+  "/rest/v1/stats?select=event",
+  {
+    headers:{
+      apikey:SUPABASE_KEY,
+      Authorization:"Bearer "+SUPABASE_KEY
+    }
+  }
+);
+
+const data = await res.json();
+
+const counts = {};
+
+data.forEach(row=>{
+  counts[row.event] = (counts[row.event] || 0) + 1;
+});
+
+const table = document.getElementById("statsTable");
+
+Object.keys(counts).sort().forEach(event=>{
+  const tr = document.createElement("tr");
+
+  const td1 = document.createElement("td");
+  td1.textContent = event;
+
+  const td2 = document.createElement("td");
+  td2.textContent = counts[event];
+
+  tr.appendChild(td1);
+  tr.appendChild(td2);
+
+  table.appendChild(tr);
+});
+
+}
+
+loadStats();
+</script>
+
+</body>
+</html>
