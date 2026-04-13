@@ -325,10 +325,8 @@ function stopMood() {
 }
 
 function stopPoem() {
-  poemVideo.pause();
-  poemVideo.currentTime = 0;
-  poemVideo.removeAttribute("src");
-  poemVideo.load();
+  poemVideo.src = ""; // ez állítja le
+
   poemOverlay.style.display = "none";
   closeBtn.style.display = "none";
   controls.style.display = "";
